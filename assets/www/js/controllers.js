@@ -15,26 +15,38 @@ angular.module('starter.controllers', [])
 //      window.plugins.PluginDemo.showmsg("测试插件", success, error);
 //	};
   $scope.chats = Chats.all();
+
   $scope.remove = function(chat) {
     Chats.remove(chat);
   };
-
 	var success = function (success) {//成功回调函数
 	  alert(success);
 	};
-
 	var error = function (fail) {//失败回调函数
 	  alert(fail);
 	};
+
   $scope.showAlert = function() {
     alert('开始连接...威武...');
     cordova.exec(function(succ){
                        		   alert('成功'+succ);
-                         },function(err){
+                         },
+                 function(err){
                        		   alert('失败'+err);
-                         }, "CordovaSuperSocketClient", "connect", ['MyApp','testWorld']);
+                         },
+                 "CordovaSuperSocketClient", "connect", ['MyApp','testWorld']);
   };
 
+  $scope.sendMsg = function() {
+    alert('开始发送消息...威武...');
+    cordova.exec(function(succ){
+                       		   alert('成功'+succ);
+                         },
+                 function(err){
+                       		   alert('失败'+err);
+                         },
+                 "CordovaSuperSocketClient", "sedMsg", ['MyApp','testWorld']);
+  };
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {

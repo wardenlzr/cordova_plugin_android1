@@ -22,6 +22,9 @@ import cordova.super_socket.chat.superSocket.SocketClient;
  * Created by yb on 2017/3/16 15:02.
  */
 public class CordovaSuperSocketClient extends CordovaPlugin {
+
+  private SocketClient socketClient;
+
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
     String message = args.getString(0);  //HelloMobileWorld
@@ -29,9 +32,9 @@ public class CordovaSuperSocketClient extends CordovaPlugin {
       message = message + "这是原生代码";
       this.connect(message, callbackContext);
       return true;
-    } else if(action.equals("test")){
+    } else if(action.equals("sedMsg")){
       message = message + "这是原生test";
-      this.test(message,callbackContext);
+      this.sedMsg(message,callbackContext);
       return true;
     }else {
       callbackContext.error("这不是一个CordovaSuperSocketClient操作");
@@ -39,15 +42,15 @@ public class CordovaSuperSocketClient extends CordovaPlugin {
     }
   }
 
-  private void test(String message, final CallbackContext callback) {
-    callback.success(message);
+  private void sedMsg(String message, final CallbackContext callback) {
+    String sendDataResult = socketClient.sendData(message);
   }
 
   //链接
   public void connect(final String message, final CallbackContext callback) {
     if (message != null && message.length() > 0) {
 //      callback.success(message);
-      final SocketClient socketClient = SocketClient.getInstance();
+      socketClient = SocketClient.getInstance();
       cordova.getThreadPool().execute(new Runnable() {
         @Override
         public void run() {
@@ -61,7 +64,7 @@ public class CordovaSuperSocketClient extends CordovaPlugin {
               }
             });
           } catch (Exception e) {
-//            callback.error(e.getMessage());
+            callback.error(e.getMessage());
           }
         }
       });

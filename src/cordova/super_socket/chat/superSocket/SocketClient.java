@@ -52,6 +52,73 @@ public class SocketClient {
   protected static final int SENDSUCCESS = 4;//发送成功
   protected static final int SENDFAILURE = -2;//发送失败
 
+  private BufferedReader in;
+
+  /**
+   * 打开连接
+   */
+  public String connection() {
+    String line = "";
+    try {
+      client = new Socket(host, port);
+      client.setSoTimeout(timeout * 3000);
+      if (callBack != null) {
+        callBack.OnSuccess(client);
+      }
+      Log.d("client", "Socket链接成功");
+      if (client != null) {
+        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        line = in.readLine();
+       /* while ((line = in.readLine()) != null) {
+          return line;
+        }*/
+      }
+    } catch (Exception e1) {
+      e1.printStackTrace();
+      Log.d("client", "连接失败");
+      line = e1.getMessage();
+    }
+    return line;
+  }
+
+  /**
+   * 发送数据（包括登录等）
+   *
+   * @param msg 对象
+   */
+  public String sendData(Object msg) {
+    String result = "";
+    try {
+      byte[] data = toByteArray(msg);
+      OutputStream serverOutput = client.getOutputStream();
+      serverOutput.write(data);
+      serverOutput.flush();
+      if (client != null) {
+        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        while ((result = in.readLine()) != null) {
+          return result;
+//          System.out.print("收到服务端消息" + result);
+        }
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return result;
+  }
+
+  /**
+   * @param obj 转换byte
+   * @return
+   */
+  public byte[] toByteArray(Object obj) {
+    try {
+      return obj.toString().getBytes("utf-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
 //  private static class MyHandler extends Handler {
 //    private final WeakReference<SocketClient> mActivity;
 //
@@ -104,72 +171,5 @@ public class SocketClient {
     this._packet = _packet;
   }*/
 
-  private BufferedReader in;
 
-  /**
-   * 打开连接
-   */
-  public String connection() {
-    String line = "";
-    try {
-      client = new Socket(host, port);
-      client.setSoTimeout(timeout * 3000);
-      if (callBack != null) {
-        callBack.OnSuccess(client);
-      }
-      Log.d("client", "Socket链接成功");
-      if (client != null) {
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        line = in.readLine();
-       /* while ((line = in.readLine()) != null) {
-          return line;
-        }*/
-      }
-    } catch (Exception e1) {
-      e1.printStackTrace();
-      Log.d("client", "连接失败");
-      line = e1.getMessage();
-    }
-    return line;
-  }
-
-  private OutputStream serverOutput;
-
-  /**
-   * 发送数据（包括登录等）
-   *
-   * @param msg 对象
-   */
-  public String sendData(Object msg) {
-    String result = "";
-    try {
-      byte[] data = toByteArray(msg);
-      serverOutput.write(data);
-      serverOutput.flush();
-
-      if (client != null) {
-        in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-        while ((result = in.readLine()) != null) {
-          System.out.print("收到服务端消息" + result);
-        }
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return result;
-  }
-
-  /**
-   * @param obj 转换byte
-   * @return
-   */
-  public byte[] toByteArray(Object obj) {
-    try {
-      return obj.toString().getBytes("utf-8");
-    } catch (UnsupportedEncodingException e) {
-      e.printStackTrace();
-      return null;
-    }
-
-  }
 }
