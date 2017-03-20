@@ -1,0 +1,70 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {
+            "res/xml/config.xml": {
+                "parents": {
+                    "/*": [
+                        {
+                            "xml": "<feature name=\"Echo\"><param name=\"android-package\" value=\"org.apache.cordova.echo.Echo\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"CordovaSuperSocketClient\"><param name=\"android-package\" value=\"cordova.super_socket.chat.CordovaSuperSocketClient\" /><param name=\"onload\" value=\"true\" /></feature>",
+                            "count": 1
+                        }
+                    ]
+                }
+            },
+            "AndroidManifest.xml": {
+                "parents": {
+                    "/*": [],
+                    "/manifest": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                            "count": 2
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.INTERNET\" />",
+                            "count": 1
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "installed_plugins": {
+        "org.apache.cordova.echo": {
+            "PACKAGE_NAME": "com.ionicframework.starter1"
+        },
+        "cordova.super_socket.chat": {
+            "PACKAGE_NAME": "com.ionicframework.starter1"
+        }
+    },
+    "dependent_plugins": {},
+    "modules": [
+        {
+            "id": "org.apache.cordova.echo.echo",
+            "file": "plugins/org.apache.cordova.echo/www/echo.js",
+            "pluginId": "org.apache.cordova.echo",
+            "clobbers": [
+                "echo"
+            ]
+        },
+        {
+            "id": "cordova.super_socket.chat.cordovaSuperSoccketClient",
+            "file": "plugins/cordova.super_socket.chat/www/cordova_super_socket_client.js",
+            "pluginId": "cordova.super_socket.chat",
+            "clobbers": [
+                "cordova_super_socket_client"
+            ]
+        }
+    ],
+    "plugin_metadata": {
+        "org.apache.cordova.echo": "0.0.1",
+        "cordova.super_socket.chat": "0.0.1"
+    }
+}
