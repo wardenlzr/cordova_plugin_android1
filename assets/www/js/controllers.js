@@ -29,10 +29,10 @@ angular.module('starter.controllers', [])
   $scope.showAlert = function() {
     alert('开始连接...威武...');
     cordova.exec(function(succ){
-                       		   alert('成功'+succ);
+                       		   alert('成功：'+succ);
                          },
                  function(err){
-                       		   alert('失败'+err);
+                       		   alert('失败：'+err);
                          },
                  "CordovaSuperSocketClient", "connect", ['MyApp','testWorld']);
   };
@@ -40,12 +40,12 @@ angular.module('starter.controllers', [])
   $scope.sendMsg = function() {
     alert('开始发送消息...威武...');
     cordova.exec(function(succ){
-                       		   alert('成功'+succ);
+                       		   alert('成功：'+succ);
                          },
                  function(err){
-                       		   alert('失败'+err);
+                       		   alert('失败：'+err);
                          },
-                 "CordovaSuperSocketClient", "sendMsg", ['login CC0001 ','testWorld']);
+                 "CordovaSuperSocketClient", "sendMsg", ['login CC0001 aaa\r\n','testWorld']);
   };
 })
 

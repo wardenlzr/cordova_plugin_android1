@@ -1,5 +1,6 @@
 package cordova.super_socket.chat;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -23,17 +24,21 @@ import cordova.super_socket.chat.superSocket.SocketClient;
 public class CordovaSuperSocketClient extends CordovaPlugin {
 
   private SocketClient socketClient = SocketClient.getInstance();
+  private static CallbackContext callbackContext;
 
   @Override
   public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    this.callbackContext = callbackContext;
     String message = args.getString(0);  //HelloMobileWorld
     if (action.equals("connect")) {   //action=echo
       message = message + "这是原生代码";
       this.connect(message, callbackContext);
       return true;
     } else if(action.equals("sendMsg")){
-      message = message + "test";
       this.sendMsg(message,callbackContext);
+      return true;
+    }else if(action.equals("getMsg")){
+      this.getMsg(callbackContext);
       return true;
     }else {
       callbackContext.error("这不是一个CordovaSuperSocketClient操作");
@@ -42,6 +47,22 @@ public class CordovaSuperSocketClient extends CordovaPlugin {
   }
   //链接
   public void connect(final String message, final CallbackContext callback) {
+    if (message != null && message.length() > 0) {
+      cordova.getThreadPool().execute(new Runnable() {
+        @Override
+        public void run() {
+          try {
+            socketClient.connection(cordova.getActivity(),callbackContext);
+          } catch (Exception e) {
+            callback.error(e.getMessage());
+          }
+        }
+      });
+    } else {
+      callback.error("Expected one non-empty string argument.");
+    }
+  }
+  /*public void connect(final String message, final CallbackContext callback) {
     if (message != null && message.length() > 0) {
       cordova.getThreadPool().execute(new Runnable() {
         @Override
@@ -63,6 +84,18 @@ public class CordovaSuperSocketClient extends CordovaPlugin {
     } else {
       callback.error("Expected one non-empty string argument.");
     }
+  }*/
+  private void getMsg( final CallbackContext callback) {
+    cordova.getThreadPool().execute(new Runnable() {
+      @Override
+      public void run() {
+        if(socketClient != null) {
+          socketClient.getReceivemessage(cordova.getActivity(),callback);
+        }else {
+          callback.error("请连接到服务器...");
+        }
+      }
+    });
   }
   private void sendMsg(final String message, final CallbackContext callback) {
     cordova.getThreadPool().execute(new Runnable() {
