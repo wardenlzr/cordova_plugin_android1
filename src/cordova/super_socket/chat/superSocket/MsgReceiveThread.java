@@ -34,7 +34,6 @@ public class MsgReceiveThread extends Thread implements Runnable {
             if (_Client != null) {
                 in = new BufferedReader(new InputStreamReader(_Client.getInputStream()));
                 while ((line = in.readLine()) != null) {
-                    System.out.print("收到服务端消息" + line);
                     Message message = new Message();
                     message.what = SocketClient.RECEIVEMESSAGE;
                     message.obj = line;

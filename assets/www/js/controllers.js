@@ -45,7 +45,7 @@ angular.module('starter.controllers', [])
                  function(err){
                        		   alert('失败'+err);
                          },
-                 "CordovaSuperSocketClient", "sedMsg", ['MyApp','testWorld']);
+                 "CordovaSuperSocketClient", "sendMsg", ['login CC0001 ','testWorld']);
   };
 })
 
